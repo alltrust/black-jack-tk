@@ -7,6 +7,7 @@ def deal_card(frame):
     next_card = deck.pop(0)
     deck.append(next_card)
     tkinter.Label(frame, image=next_card[1], relief='raised').pack(side='left')
+    # return the card's face value
     return next_card
 
 
@@ -87,6 +88,7 @@ def shuffle():
 
 mainWindow = tkinter.Tk()
 
+# screen and frames setup for dealer and player
 mainWindow.title("Blackjack")
 mainWindow.geometry("640x480")
 mainWindow.configure(background='green')
@@ -105,6 +107,7 @@ tkinter.Label(card_frame, text="Dealer", background="green",
 tkinter.Label(card_frame, textvariable=dealer_score_label,
               background="green", fg="white").grid(row=1, column=0)
 
+# embedded frame to hold card images
 dealer_card_frame = tkinter.Frame(card_frame, background="green")
 dealer_card_frame.grid(row=0, column=1, sticky='ew', rowspan=2)
 
@@ -136,9 +139,14 @@ new_game_btn.grid(row=0, column=2)
 shuffle_btn = tkinter.Button(button_frame, text="Shuffle", command="shuffle")
 shuffle_btn.grid(row=0, column=3)
 
+
+
+# load cards
 cards = []
 load_images(cards)
 
+
+# create a new deck of cards and shuffle them
 deck = list(cards)
 
 shuffle()
