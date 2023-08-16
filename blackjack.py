@@ -3,11 +3,10 @@ import tkinter
 from load_images import load_images
 
 
-def deal_card(frame):
+def _deal_card(frame):
     next_card = deck.pop(0)
     deck.append(next_card)
     tkinter.Label(frame, image=next_card[1], relief='raised').pack(side='left')
-    # return the card's face value
     return next_card
 
 
@@ -29,7 +28,7 @@ def score_hand(hand):
 def deal_dealer():
     dealer_score = score_hand(dealer_hand)
     while 0 < dealer_score < 17:
-        dealer_hand.append(deal_card(dealer_card_frame))
+        dealer_hand.append(_deal_card(dealer_card_frame))
         dealer_score = score_hand(dealer_hand)
         dealer_score_label.set(dealer_score)
 
@@ -45,13 +44,19 @@ def deal_dealer():
 
 
 def deal_player():
-    player_hand.append(deal_card(player_card_frame))
+    player_hand.append(_deal_card(player_card_frame))
     player_score = score_hand(player_hand)
 
     player_score_label.set(player_score)
 
     if player_score > 21:
         result_text.set("Dealer wins")
+
+def intiial_deal():
+    deal_player()
+    dealer_hand.append(_deal_card(dealer_card_frame))
+    dealer_score_label.set(score_hand(dealer_hand))
+    deal_player()
 
 def restart_game():
     global dealer_card_frame
@@ -64,27 +69,31 @@ def restart_game():
 
     dealer_card_frame = create_card_frame(0)
     player_card_frame = create_card_frame(2)
- 
+
     result_text.set("")
-    
+
     dealer_hand = []
     player_hand = []
 
-    deal_player()
-    dealer_hand.append(deal_card(dealer_card_frame))
-    dealer_score_label.set(score_hand(dealer_hand))
-    deal_player()
-   
+    intiial_deal()
 
-def create_card_frame(row:int):
+
+def create_card_frame(row: int):
     new_card_frame = tkinter.Frame(card_frame, background="green")
     new_card_frame.grid(row=row, column=1, sticky='ew', rowspan=2)
     return new_card_frame
+
 
 def shuffle():
     random.shuffle(deck)
 
 
+def play():
+    intiial_deal()
+    mainWindow.mainloop()
+
+
+# check if this is the modue that is running
 
 mainWindow = tkinter.Tk()
 
@@ -133,20 +142,17 @@ player_button = tkinter.Button(
     button_frame, text="Player", command=deal_player)
 player_button.grid(row=0, column=1)
 
-new_game_btn = tkinter.Button(button_frame, text="New Game", command=restart_game )
+new_game_btn = tkinter.Button(
+    button_frame, text="New Game", command=restart_game)
 new_game_btn.grid(row=0, column=2)
 
 shuffle_btn = tkinter.Button(button_frame, text="Shuffle", command="shuffle")
 shuffle_btn.grid(row=0, column=3)
 
 
-
-# load cards
 cards = []
 load_images(cards)
 
-
-# create a new deck of cards and shuffle them
 deck = list(cards)
 
 shuffle()
@@ -154,7 +160,7 @@ shuffle()
 dealer_hand = []
 player_hand = []
 
-restart_game()
+if __name__ == "__main__":
+    play()
 
 
-mainWindow.mainloop()
